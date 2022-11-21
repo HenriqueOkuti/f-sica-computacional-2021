@@ -1,0 +1,220 @@
+	do pontos = 1 , 50000, 1	! Caso eu mude, utilizei: pontos = 1, 50000, 1 <- Deve fornecer 10 anos para deltaT = 0.0002d0
+
+		!================================================================================================
+		!================================================================================================
+		! RK4 - CALCULO COEFICIENTES P/ {VX1, VX2 , VX3 , X1 , X2 , X3, VY1 , VY2 , VY3 , Y1 , Y2 , Y3 }:
+		
+		k1vx12 = deltaT*G_M*delta1*( ((x1_old - x2_old)/r3p12) )
+		k1vx13 = deltaT*G_M*delta1*( ((x1_old - x3_old)/r3p13) )
+		k1vx21 = deltaT*G_M*delta1*( ((x2_old - x1_old)/r3p12) )
+		k1vx23 = deltaT*G_M*((x2_old - x3_old)/r3p23)
+		k1vx31 = deltaT*G_M*delta1*( ((x3_old - x1_old)/r3p13) )
+		k1vx32 = deltaT*G_M*( ((x3_old - x2_old)/r3p23) )
+
+		k1vy12 = deltaT*G_M*delta1*( ((y1_old - y2_old)/r3p12) )
+		k1vy13 = deltaT*G_M*delta1*( ((y1_old - y3_old)/r3p13) )
+		k1vy21 = deltaT*G_M*delta1*( (y2_old - y1_old)/r3p12) 
+		k1vy23 = deltaT*G_M*(((y2_old - y3_old)/r3p23))
+		k1vy31 = deltaT*G_M*( (delta1*(y3_old - y1_old)/r3p13) )
+		k1vy31 = deltaT*G_M*(( (y3_old - y2_old)/r3p23) )
+
+		k1vx1 = k1vx12 + k1vx13
+		k1vx2 = k1vx21 + k1vx23
+		k1vx3 = k1vx31 + k1vx32
+		k1vy1 = k1vy12 + k1vy13
+		k1vy2 = k1vy21 + k1vy23
+		k1vy3 = k1vy31 + k1vy32
+
+		k1x1 = deltaT*vx1_old
+		k1x2 = deltaT*vx2_old
+		k1x3 = deltaT*vx3_old
+		
+		k1y1 = deltaT*vy1_old
+		k1y2 = deltaT*vy2_old
+		k1y3 = deltaT*vy3_old
+
+		k2vx12 = deltaT*G_M*delta1*( ((x1_old - x2_old + (k1x1/2.d0))/r3p12) )
+		k2vx13 = deltaT*G_M*delta1*( ((x1_old - x3_old + (k1x1/2.d0))/r3p13) )
+		k2vx21 = deltaT*G_M*delta1*( ((x2_old - x1_old + (k1x2/2.d0))/r3p12) )
+		k2vx23 = deltaT*G_M*((x2_old - x3_old + (k1x2/2.d0))/r3p23)
+		k2vx31 = deltaT*G_M*delta1*( ((x3_old - x1_old + (k1x3/2.d0))/r3p13) )
+		k2vx32 = deltaT*G_M*( ((x3_old - x2_old + (k1x3/2.d0))/r3p23) )
+
+		k2vy12 = deltaT*G_M*delta1*( ((y1_old - y2_old + (k1y1/2.d0))/r3p12) )
+		k2vy13 = deltaT*G_M*delta1*( ((y1_old - y3_old + (k1y1/2.d0))/r3p13) )
+		k2vy21 = deltaT*G_M*delta1*( ((y2_old - y1_old + (k1y2/2.d0))/r3p12) )
+		k2vy23 = deltaT*G_M*( ((y2_old - y3_old + (k1y2/2.d0))/r3p23) )
+		k2vy31 = deltaT*G_M*delta1*( ((y3_old - y1_old + (k1y3/2.d0))/r3p13) )
+		k2vy32 = deltaT*G_M*( ((y3_old - y2_old + (k1y3/2.d0))/r3p23) )
+
+		k2vx1 = k2vx12 + k2vx13
+		k2vx2 = k2vx21 + k2vx23
+		k2vx3 = k2vx31 + k2vx32
+		k2vy1 = k2vy12 + k2vy13
+		k2vy2 = k2vy21 + k2vy23
+		k2vy3 = k2vy31 + k2vy32
+
+		k2x1 = deltaT*(vx1_old + (k1vx12/2.d0) + (k1vx13/2.d0))
+		k2x2 = deltaT*(vx2_old + (k1vx21/2.d0) + (k1vx23/2.d0))
+		k2x3 = deltaT*(vx3_old + (k1vx31/2.d0) + (k1vx32/2.d0))
+		
+		k2y1 = deltaT*(vy1_old + (k1vy12/2.d0) + (k1vy13/2.d0))
+		k2y2 = deltaT*(vy2_old + (k1vy21/2.d0) + (k1vy23/2.d0))
+		k2y3 = deltaT*(vy3_old + (k1vy31/2.d0) + (k1vy32/2.d0))
+		
+		k3vx12 = deltaT*G_M*delta1*( ((x1_old - x2_old + (k2x1/2.d0))/r3p12) )
+		k3vx13 = deltaT*G_M*delta1*( ((x1_old - x3_old + (k2x1/2.d0))/r3p13) )
+		k3vx21 = deltaT*G_M*delta1*( ((x2_old - x1_old + (k2x2/2.d0))/r3p12) )
+		k3vx23 = deltaT*G_M*((x2_old - x3_old + (k2x2/2.d0))/r3p23)
+		k3vx31 = deltaT*G_M*delta1*( ((x3_old - x1_old + (k2x3/2.d0))/r3p13) )
+		k3vx32 = deltaT*G_M*( ((x3_old - x2_old + (k2x3/2.d0))/r3p23) )
+
+		k3vy12 = deltaT*G_M*delta1*( ((y1_old - y2_old + (k2y1/2.d0))/r3p12) )
+		k3vy13 = deltaT*G_M*delta1*( ((y1_old - y3_old + (k2y1/2.d0))/r3p13) )
+		k3vy21 = deltaT*G_M*delta1*( ((y2_old - y1_old + (k2y2/2.d0))/r3p12) )
+		k3vy23 = deltaT*G_M*( ((y2_old - y3_old + (k2y2/2.d0))/r3p23) )
+		k3vy31 = deltaT*G_M*delta1*( ((y3_old - y1_old + (k2y3/2.d0))/r3p13) )
+		k3vy32 = deltaT*G_M*( ((y3_old - y2_old + (k2y3/2.d0))/r3p23) )
+		
+		k3vx1 = k3vx12 + k3vx13
+		k3vx2 = k3vx21 + k3vx23
+		k3vx3 = k3vx31 + k3vx32
+		k3vy1 = k3vy12 + k3vy13
+		k3vy2 = k3vy21 + k3vy23
+		k3vy3 = k3vy31 + k3vy32
+
+		k3x1 = deltaT*(vx1_old + (k2vx12/2.d0) + (k2vx13/2.d0))
+		k3x2 = deltaT*(vx2_old + (k2vx21/2.d0) + (k2vx23/2.d0))
+		k3x3 = deltaT*(vx3_old + (k2vx31/2.d0) + (k2vx32/2.d0))
+		
+		k3y1 = deltaT*(vy1_old + (k2vy12/2.d0) + (k2vy13/2.d0))
+		k3y2 = deltaT*(vy2_old + (k2vy21/2.d0) + (k2vy23/2.d0))
+		k3y3 = deltaT*(vy3_old + (k2vy31/2.d0) + (k2vy32/2.d0))
+		
+		k4vx12 = deltaT*G_M*delta1*( ((x1_old - x2_old + k3x1)/r3p12) )
+		k4vx13 = deltaT*G_M*delta1*( ((x1_old - x3_old + k3x1)/r3p13) )
+		k4vx21 = deltaT*G_M*delta1*( ((x2_old - x1_old + k3x2)/r3p12) )
+		k4vx23 = deltaT*G_M*((x2_old - x3_old + k3x2)/r3p23)
+		k4vx31 = deltaT*G_M*delta1*( ((x3_old - x1_old + k3x3)/r3p13) )
+		k4vx32 = deltaT*G_M*( ((x3_old - x2_old + k3x3)/r3p23) )
+
+		k4vy12 = deltaT*G_M*delta1*( ((y1_old - y2_old + (k3y1/2.d0))/r3p12) )
+		k4vy13 = deltaT*G_M*delta1*( ((y1_old - y3_old + (k3y1/2.d0))/r3p13) )
+		k4vy21 = deltaT*G_M*delta1*( ((y2_old - y1_old + (k3y2/2.d0))/r3p12) )
+		k4vy23 = deltaT*G_M*( ((y2_old - y3_old + (k3y2/2.d0))/r3p23) )
+		k4vy31 = deltaT*G_M*delta1*( ((y3_old - y1_old + (k3y3/2.d0))/r3p13) )
+		k4vy32 = deltaT*G_M*( ((y3_old - y2_old + (k3y3/2.d0))/r3p23) )
+		
+		k4vx1 = k4vx12 + k4vx13
+		k4vx2 = k4vx21 + k4vx23
+		k4vx3 = k4vx31 + k4vx32
+		k4vy1 = k4vy12 + k4vy13
+		k4vy2 = k4vy21 + k4vy23
+		k4vy3 = k4vy31 + k4vy32
+		
+		k4x1 = deltaT*(vx1_old + k3vx12 + k3vx13)
+		k4x2 = deltaT*(vx2_old + k3vx21 + k3vx23)
+		k4x3 = deltaT*(vx3_old + k3vx31 + k3vx32)
+		
+		k4y1 = deltaT*(vy1_old + k3vy12 + k3vy13)
+		k4y2 = deltaT*(vy2_old + k3vy21 + k3vy23)
+		k4y3 = deltaT*(vy3_old + k3vy31 + k3vy32)
+		
+		!================================================================================================
+		!================================================================================================
+		!APLICAÇÃO DO RK4 EM {X1 , X2 , X3 , VX1, VX2, VX3}:
+		
+		somakx1 = (1.d0/6.d0)*(k1x1 + (2.d0*k2x1) + (2.d0*k3x1) + k4x1)
+		somakx2 = (1.d0/6.d0)*(k1x2 + (2.d0*k2x2) + (2.d0*k3x2) + k4x2)
+		somakx3 = (1.d0/6.d0)*(k1x3 + (2.d0*k2x3) + (2.d0*k3x3) + k4x3)
+		
+		somakvx1 = (1.d0/6.d0)*(k1vx1 + (2.d0*k2vx1) + (2.d0*k3vx1) + k4vx1)
+		somakvx2 = (1.d0/6.d0)*(k1vx2 + (2.d0*k2vx2) + (2.d0*k3vx2) + k4vx2)
+		somakvx3 = (1.d0/6.d0)*(k1vx3 + (2.d0*k2vx3) + (2.d0*k3vx3) + k4vx3)
+		
+		x1_new = x1_old + somakx1
+		x2_new = x2_old + somakx2
+		x3_new = x3_old + somakx3
+
+		vx1_new = vx1_old + somakvx1
+		vx2_new = vx2_old + somakvx2
+		vx3_new = vx3_old + somakvx3
+
+		
+		!================================================================================================
+		!================================================================================================
+		!APLICAÇÃO DO RK4 EM { Y1 , Y2 , Y3 , VY1 , VY2 , VY3}:
+		
+		somaky1 = (1.d0/6.d0)*(k1y1 + (2.d0*k2y1) + (2.d0*k3y1) + k4y1)
+		somaky2 = (1.d0/6.d0)*(k1y2 + (2.d0*k2y2) + (2.d0*k3y2) + k4y2)
+		somaky3 = (1.d0/6.d0)*(k1y3 + (2.d0*k2y3) + (2.d0*k3y3) + k4y3)
+		
+		somakvy1 = (1.d0/6.d0)*(k1vy1 + (2.d0*k2vy1) + (2.d0*k3vy1) + k4vy1)
+		somakvy2 = (1.d0/6.d0)*(k1vy2 + (2.d0*k2vy2) + (2.d0*k3vy2) + k4vy2)
+		somakvy3 = (1.d0/6.d0)*(k1vy3 + (2.d0*k2vy3) + (2.d0*k3vy3) + k4vy3)
+		
+		y1_new = y1_old + somaky1
+		y2_new = y2_old + somaky2
+		y3_new = y3_old + somaky3
+
+		vy1_new = vy1_old + somakvy1
+		vy2_new = vy2_old + somakvy2
+		vy3_new = vy3_old + somakvy3
+
+		!write(*,*)somakvx2 , somakvy2
+	
+		!================================================================================================
+		!================================================================================================
+		!EULER-CROMER { Y1 , Y2 , Y3 , VY1 , VY2 , VY3}:
+
+		!vx1_new = vx1_old + deltaT*G_m*delta1*( (x1_old - x2_old)/r3p12 + (x1_old - x3_old)/r3p13 )
+		!vx2_new = vx2_old + deltaT*G_m*( delta1*(x2_old - x1_old)/r3p12 + (x2_old - x3_old)/r3p23 )
+		!vx3_new = vx3_old + deltaT*G_m*( delta1*(x3_old - x1_old)/r3p13 + (x3_old - x2_old)/r3p23 )
+		
+		!vy1_new = vy1_old + deltaT*G_m*delta1*( (y1_old - y2_old)/r3p12 + (y1_old - y3_old)/r3p13 )
+		!vy2_new = vy2_old + deltaT*G_m*( delta1*(y2_old - y1_old)/r3p12 + (y2_old - y3_old)/r3p23 )
+		!vy3_new = vy3_old + deltaT*G_m*( delta1*(y3_old - y1_old)/r3p13 + (y3_old - y2_old)/r3p23 )
+		
+		!x1_new = x1_old + deltaT*vx1_new
+		!x2_new = x2_old + deltaT*vx2_new
+		!x3_new = x3_old + deltaT*vx3_new
+
+		!y1_new = y1_old + deltaT*vy1_new
+		!y2_new = y2_old + deltaT*vy2_new
+		!y3_new = y3_old + deltaT*vy3_new
+
+
+		write(44,*)x1_old, y1_old, tempo, x2_old, y2_old, tempo, x3_old, y3_old, tempo
+		write(45,*)vx1_old, vy1_old, tempo, vx2_old, vy2_old, tempo, vx3_old, vy3_old, tempo
+		write(46,*)tempo, rp12, rp13, rp23, (vy1_old / vx1_old), (vy2_old / vx2_old), (vy3_old / vx3_old)
+		
+		rp12 = dsqrt((x1_old-x2_old)**(2.d0) + (y1_old-y2_old)**(2.d0))
+		rp13 = dsqrt((x1_old-x3_old)**(2.d0) + (y1_old-y3_old)**(2.d0))
+		rp23 = dsqrt((x2_old-x3_old)**(2.d0) + (y2_old-y3_old)**(2.d0))	
+		
+		!r3p12 = rp12**(3.d0)
+		!r3p13 = rp13**(3.d0)
+		!r3p23 = rp23**(3.d0)
+		
+		x1_old = x1_new
+		x2_old = x2_new
+		x3_old = x3_new
+		
+		y1_old = y1_new
+		y2_old = y2_new
+		y3_old = y3_new
+		
+		vx1_old = vx1_new
+		vx2_old = vx2_new
+		vx3_old = vx3_new
+		
+		vy1_old = vy1_new
+		vy2_old = vy2_new
+		vy3_old = vy3_new
+		
+
+		
+		tempo = tempo + deltaT
+
+		
+	end do
